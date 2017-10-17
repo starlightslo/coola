@@ -1,0 +1,30 @@
+{
+  "name": "coola",
+  "version": "0.0.1",
+  "description": "A Node.js framework for building web applications based on TypeScript",
+  "main": "./dist/index.js",
+  "types": "./.d.ts/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starlightslo/coola.git"
+  },
+  "author": "Tony Huang <tony@huang.ninja> (http://huang.ninja)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/starlightslo/coola/issues"
+  },
+  "homepage": "https://github.com/starlightslo/coola#readme",
+  "dependencies": {
+    "hapi": "^16.6.2"
+  },
+  "devDependencies": {
+    "@types/hapi": "^16.1.10",
+    "@types/node": "^8.0.41",
+    "@types/reflect-metadata": "^0.0.5",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.3"
+  }
+}
