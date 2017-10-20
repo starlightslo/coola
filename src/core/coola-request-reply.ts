@@ -12,6 +12,18 @@ export class CoolaRequestReply {
         this._reply = reply;
     }
 
+    public getPayload(): any {
+        return this._request.payload;
+    }
+
+    public getParams(): any {
+        return this._request.params;
+    }
+
+    public getQuery(): any {
+        return this._request.query;
+    }
+
     public code(statusCode: number): CoolaRequestReply {
         this._code = statusCode;
         return this;

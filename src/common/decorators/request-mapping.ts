@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import { RequestMappingMetadata } from '../interfaces/request-mapping-metadata';
 import { RequestMethod } from '../enums/request-method';
 import { PATH_METADATA, METHOD_METADATA } from '../constants';
+import { Utils } from '../utils';
 
 const defaultMetadata = {
     [PATH_METADATA]: '/',
@@ -10,7 +11,7 @@ const defaultMetadata = {
 };
 
 export const RequestMapping = (metadata: RequestMappingMetadata = defaultMetadata): MethodDecorator => {
-    const path = metadata[PATH_METADATA] || '/';
+    const path = metadata[PATH_METADATA];
     const requestMethod = metadata[METHOD_METADATA] || RequestMethod.GET;
 
     return (target, key, descriptor: PropertyDescriptor) => {
@@ -21,6 +22,9 @@ export const RequestMapping = (metadata: RequestMappingMetadata = defaultMetadat
 };
 
 const createMappingDecorator = (method: RequestMethod) => (path?: string): MethodDecorator => {
+    if (path) path = Utils.removeURLPrefix(path);
+    else path = '';
+
     return RequestMapping({
         [PATH_METADATA]: path,
         [METHOD_METADATA]: method,

@@ -10,6 +10,7 @@ export class Index {
     @RequestValidation(LoginRequestValidation)
     @ResponseValidation(LoginResponseValidation)
     login(crr: CoolaRequestReply) {
-        crr.reply('OK');
+        const payload = crr.getPayload();
+        crr.reply(payload.username);
     }
 }

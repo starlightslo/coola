@@ -21,10 +21,18 @@ export class Utils {
     }
 
     static setURLPrefix(path: string): string {
-        if (path.startsWith('/')) {
+        if (path && path.startsWith('/')) {
             return path;
         } else {
             return '/' + path;
+        }
+    }
+
+    static removeURLPrefix(path: string): string {
+        if (path && path.startsWith('/')) {
+            return path.slice(1);
+        } else {
+            return path;
         }
     }
 }
