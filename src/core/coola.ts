@@ -6,7 +6,7 @@ import { CoolaConfig } from './coola-config';
 import { CoolaRequestReply } from './coola-request-reply';
 import { Logger } from './logger';
 import { Utils } from '../common';
-import { metadata, PATH_METADATA, METHOD_METADATA } from '../common/constants';
+import { metadata, PATH_METADATA, METHOD_METADATA, REQUEST_VALIDATION, RESPONSE_VALIDATION } from '../common/constants';
 import { RequestMethod } from '../common/enums/request-method';
 
 export class Coola {
@@ -47,15 +47,25 @@ export class Coola {
         Reflect.ownKeys(controller.prototype).forEach((func) => {
             const path = basePath + Reflect.getMetadata(PATH_METADATA, controller.prototype[func]);
             const method = Utils.getRequestMethodString(Reflect.getMetadata(METHOD_METADATA, controller.prototype[func]))
+            const requestValidation = Reflect.getMetadata(REQUEST_VALIDATION, controller.prototype[func]);
+            const responseValidation = Reflect.getMetadata(RESPONSE_VALIDATION, controller.prototype[func]);
             if (method !== undefined) {
                 this.logger.info('  - [' + method + '] ' + path);
-                this.addRoute(path, method, _controller[func]);
+                this.addRoute(path, method, _controller[func], requestValidation, responseValidation);
             }
         });
     }
 
-    private addRoute(path: string, method: Hapi.HTTP_METHODS_PARTIAL, func: any) {
-        this.mHapiServer.route({
+    private addRoute(
+        path: string,
+        method: Hapi.HTTP_METHODS_PARTIAL,
+        func: any,
+        requestValidation: any,
+        responseValidation: any
+    ) {
+
+        // Basic route config
+        let routeConfig = {
             path: path,
             method: method,
             config: {
@@ -64,7 +74,18 @@ export class Coola {
                     func(coolaRequestReply);
                 }
             }
-        });
+        };
+
+        // Validations
+        if (requestValidation) {
+            routeConfig['config']['validate'] = requestValidation;
+        }
+        if (responseValidation) {
+            routeConfig['config']['response'] = responseValidation;
+        }
+
+        this.mHapiServer.route(routeConfig);
+
     }
 
     public start(): Promise<string> {
