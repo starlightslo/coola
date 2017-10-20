@@ -33,7 +33,7 @@ export class Coola {
 
     private handleControllers(): void {
         const controllers = Reflect.getMetadata(metadata.CONTROLLERS, this.config.constructor);
-        if (!controllers) return;
+        if (!controllers) { return; }
 
         controllers.forEach((controller) => {
             const basePath = Utils.setURLPrefix(Reflect.getMetadata(PATH_METADATA, controller));
@@ -46,7 +46,7 @@ export class Coola {
         const _controller = new controller();
         Reflect.ownKeys(controller.prototype).forEach((func) => {
             const path = basePath + Reflect.getMetadata(PATH_METADATA, controller.prototype[func]);
-            const method = Utils.getRequestMethodString(Reflect.getMetadata(METHOD_METADATA, controller.prototype[func]))
+            const method = Utils.getRequestMethodString(Reflect.getMetadata(METHOD_METADATA, controller.prototype[func]));
             const requestValidation = Reflect.getMetadata(REQUEST_VALIDATION, controller.prototype[func]);
             const responseValidation = Reflect.getMetadata(RESPONSE_VALIDATION, controller.prototype[func]);
             if (method !== undefined) {

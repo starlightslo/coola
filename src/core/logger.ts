@@ -7,11 +7,11 @@ export class Logger {
     }
 
     public info(data: string): void {
-        if (this.isDebug) console.info(data);
+        if (this.isDebug) { console.info(data); }
     }
 
     public warn(data: string): void {
-        if (this.isDebug) console.warn(data);
+        if (this.isDebug) { console.warn(data); }
     }
 
     public error(data: string): void {

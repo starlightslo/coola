@@ -31,7 +31,7 @@ export class CoolaRequestReply {
 
     public reply(payload: any, statusCode?: number): void {
         // Prevent send twice
-        if (this.isSend) return;
+        if (this.isSend) { return; }
 
         if (statusCode) {
             this._code = statusCode;
