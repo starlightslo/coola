@@ -8,8 +8,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es6",
-    "sourceMap": true,
-    "allowJs": true,
+    "sourceMap": false,
+    "allowJs": false,
     "outDir": "./dist",
     "declarationDir": ".d.ts",
     "types": [
@@ -17,8 +17,7 @@
     ]
   },
   "include": [
-    "src/**/*",
-    "examples/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

@@ -7,6 +7,8 @@
   "scripts": {
     "tslint": "tslint src/**/*.ts",
     "test": "npm run tslint && nyc mocha test/**/*.ts",
+    "clean": "rimraf dist && rimraf .d.ts",
+    "build": "npm run clean && tsc -p tsconfig.json",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "precommit": "npm run tslint",
     "prepush": "npm test"
@@ -59,6 +61,7 @@
     "mocha": "^4.0.1",
     "nyc": "^11.2.1",
     "reflect-metadata": "^0.1.10",
+    "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.3"
