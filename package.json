@@ -5,7 +5,29 @@
   "main": "./dist/index.js",
   "types": "./.d.ts/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc mocha test/**/*.ts",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules/"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "all": true  
   },
   "repository": {
     "type": "git",
@@ -21,9 +43,15 @@
     "hapi": "^16.6.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.4",
     "@types/hapi": "^16.1.10",
+    "@types/mocha": "^2.2.43",
     "@types/node": "^8.0.41",
     "@types/reflect-metadata": "^0.0.5",
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
+    "mocha": "^4.0.1",
+    "nyc": "^11.2.1",
     "reflect-metadata": "^0.1.10",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.3"

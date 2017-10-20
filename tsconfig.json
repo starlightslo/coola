@@ -11,7 +11,10 @@
     "sourceMap": true,
     "allowJs": true,
     "outDir": "./dist",
-    "declarationDir": ".d.ts"
+    "declarationDir": ".d.ts",
+    "types": [
+      "mocha"
+    ]
   },
   "include": [
     "src/**/*",

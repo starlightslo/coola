@@ -7,6 +7,6 @@ async function bootstrap() {
     config.setPort(8081);
 
     const coola = new Coola(config);
-    await coola.start();
+    const err = await coola.start();
 }
 bootstrap();
