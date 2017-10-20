@@ -5,9 +5,10 @@
   "main": "./dist/index.js",
   "types": "./.d.ts/index.d.ts",
   "scripts": {
-    "test": "tslint src/**/*.ts && nyc mocha test/**/*.ts",
+    "tslint": "tslint src/**/*.ts",
+    "test": "npm run tslint && nyc mocha test/**/*.ts",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "precommit": "npm test",
+    "precommit": "npm run tslint",
     "prepush": "npm test"
   },
   "nyc": {
