@@ -1,4 +1,4 @@
-import { Controller, Get, RequestValidation } from '../../../../src/common';
+import { Controller, Get } from '../../../../src/common';
 import { Coola, CoolaRequestReply } from '../../../../src/core';
 
 @Controller('user')
