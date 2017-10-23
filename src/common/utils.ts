@@ -35,4 +35,12 @@ export class Utils {
             return path;
         }
     }
+
+    static removeURLPostfix(path: string): string {
+        if (path && path.endsWith('/')) {
+            return path.slice(0, -1);
+        } else {
+            return path;
+        }
+    }
 }

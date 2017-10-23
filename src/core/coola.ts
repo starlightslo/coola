@@ -45,13 +45,14 @@ export class Coola {
     private addController(basePath: string, controller: any): void {
         const _controller = new controller();
         Reflect.ownKeys(controller.prototype).forEach((func) => {
-            const path = basePath + Reflect.getMetadata(PATH_METADATA, controller.prototype[func]);
+            const path = Reflect.getMetadata(PATH_METADATA, controller.prototype[func]);
             const method = Utils.getRequestMethodString(Reflect.getMetadata(METHOD_METADATA, controller.prototype[func]));
             const requestValidation = Reflect.getMetadata(REQUEST_VALIDATION, controller.prototype[func]);
             const responseValidation = Reflect.getMetadata(RESPONSE_VALIDATION, controller.prototype[func]);
+            const actualPath = (!path) ? basePath : basePath + ((basePath === '/') ? Utils.removeURLPrefix(path) : Utils.setURLPrefix(path));
             if (method !== undefined) {
-                this.logger.info('  - [' + method + '] ' + path);
-                this.addRoute(path, method, _controller[func], requestValidation, responseValidation);
+                this.logger.info('  - [' + method + '] ' + actualPath);
+                this.addRoute(actualPath, method, _controller[func], requestValidation, responseValidation);
             }
         });
     }

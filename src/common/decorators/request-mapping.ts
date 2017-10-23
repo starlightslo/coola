@@ -22,8 +22,7 @@ export const RequestMapping = (metadata: RequestMappingMetadata = defaultMetadat
 };
 
 const createMappingDecorator = (method: RequestMethod) => (path?: string): MethodDecorator => {
-    if (path) path = Utils.removeURLPrefix(path);
-    else path = '';
+    if (!path) path = '';
 
     return RequestMapping({
         [PATH_METADATA]: path,
