@@ -44,7 +44,7 @@ export class Coola {
 
     private addController(basePath: string, controller: any): void {
         const _controller = new controller();
-        Reflect.ownKeys(controller.prototype).forEach((func) => {
+        Object.getOwnPropertyNames(controller.prototype).forEach((func) => {
             const path = Reflect.getMetadata(PATH_METADATA, controller.prototype[func]);
             const method = Utils.getRequestMethodString(Reflect.getMetadata(METHOD_METADATA, controller.prototype[func]));
             const requestValidation = Reflect.getMetadata(REQUEST_VALIDATION, controller.prototype[func]);
