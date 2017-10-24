@@ -8,7 +8,7 @@
     "tslint": "tslint src/**/*.ts",
     "test": "npm run tslint && nyc mocha test/**/*.ts",
     "clean": "rimraf dist && rimraf .d.ts",
-    "build": "npm run clean && tsc -p tsconfig.json",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "precommit": "npm run tslint",
     "prepush": "npm test"
