@@ -1,20 +1,36 @@
+import * as moment from 'moment';
+import * as colors from 'colors';
+import * as chalk from 'chalk';
+import { ILogger } from '../common/interfaces/logger';
 
-export class Logger {
+export class Logger implements ILogger {
     private isDebug: boolean = true;
 
     constructor(isDebug: boolean) {
         this.isDebug = isDebug;
     }
 
-    public info(data: string): void {
-        if (this.isDebug) { console.info(data); }
+    public debug(data: any): void {
+        if (this.isDebug) { console.log(moment().format('YYYY-MM-DD hh:mm:ss.SSS') + ' DEBUG ' + data); }
     }
 
-    public warn(data: string): void {
-        if (this.isDebug) { console.warn(data); }
+    public trace(data: any): void {
+        if (this.isDebug) { console.trace(data); }
     }
 
-    public error(data: string): void {
-        console.error(data);
+    public info(data: any): void {
+        if (this.isDebug) { console.info(moment().format('YYYY-MM-DD hh:mm:ss.SSS') + colors.green(' INFO ') + data); }
+    }
+
+    public warn(data: any): void {
+        if (this.isDebug) { console.warn(moment().format('YYYY-MM-DD hh:mm:ss.SSS') + colors.yellow(' WARN ') + data); }
+    }
+
+    public error(data: any): void {
+        console.error(moment().format('YYYY-MM-DD hh:mm:ss.SSS') + colors.red(' ERROR ') + data);
+    }
+
+    public fatal(data: any): void {
+        console.error(moment().format('YYYY-MM-DD hh:mm:ss.SSS') + colors.red(' FATAL ') + data);
     }
 }

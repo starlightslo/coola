@@ -1,18 +1,32 @@
 import 'reflect-metadata';
 
 import * as Hapi from 'hapi';
+import * as moment from 'moment';
 
 import { CoolaConfig } from './coola-config';
 import { CoolaRequestReply } from './coola-request-reply';
 import { Logger } from './logger';
 import { Utils } from '../common';
 import { metadata, PATH_METADATA, METHOD_METADATA, REQUEST_VALIDATION, RESPONSE_VALIDATION } from '../common/constants';
-import { RequestMethod } from '../common/enums/request-method';
+import { RequestMethod, State } from '../common/enums';
 
 export class Coola {
     private mHapiServer = new Hapi.Server();
     private config: CoolaConfig = new CoolaConfig();
     private logger: Logger = null;
+
+    preHandlerMiddleware = (coolaRequestReply: CoolaRequestReply): void => {
+        coolaRequestReply.set(State.START_TIME, moment());
+    }
+
+    postHandlerMiddleware = (coolaRequestReply: CoolaRequestReply): void => {
+        const responseTime = moment().diff(coolaRequestReply.get(State.START_TIME));
+        this.logger.debug(
+            coolaRequestReply.getRequest().method + ' ' +
+            coolaRequestReply.getRequest().path + ' - ' +
+            responseTime + 'ms'
+        );
+    }
 
     constructor(config?: CoolaConfig) {
         // Replacing the config if existing
@@ -71,8 +85,10 @@ export class Coola {
             method: method,
             config: {
                 handler: (request: Hapi.Request, reply: Hapi.ReplyNoContinue) => {
-                    const coolaRequestReply = new CoolaRequestReply(request, reply);
+                    const coolaRequestReply = new CoolaRequestReply(this, request, reply);
+                    this.preHandlerMiddleware(coolaRequestReply);
                     func(coolaRequestReply);
+                    this.postHandlerMiddleware(coolaRequestReply);
                 }
             }
         };
@@ -89,18 +105,36 @@ export class Coola {
 
     }
 
+    public setPreHandlerMiddleware(preHandlerMiddleware: any): void {
+        this.preHandlerMiddleware = preHandlerMiddleware;
+    }
+
+    public setPostHandlerMiddleware(postHandlerMiddleware: any): void {
+        this.postHandlerMiddleware = postHandlerMiddleware;
+    }
+
+    public setLogger(logger: Logger) {
+        this.logger = logger;
+    }
+
+    public getLogger(): Logger {
+        return this.logger;
+    }
+
     public start(): Promise<string> {
         return new Promise((resolve, reject) => {
             this.mHapiServer.start().then((err) => {
                 if (err) {
-                    console.error(err);
+                    this.logger.error(err);
                     resolve(err.toString());
                     return;
                 }
-                console.info('Coola is running at: ' + this.mHapiServer.info.uri);
+                this.logger.info('-----------------------------------------------------');
+                this.logger.info('Coola is running at: ' + this.mHapiServer.info.uri);
+                this.logger.info('-----------------------------------------------------');
                 resolve(null);
             }).catch((err) => {
-                console.error(err);
+                this.logger.error(err);
                 reject(err);
             });
         });
@@ -110,14 +144,14 @@ export class Coola {
         return new Promise((resolve, reject) => {
             this.mHapiServer.stop().then((err) => {
                 if (err) {
-                    console.error(err);
+                    this.logger.error(err);
                     resolve(err.toString());
                     return;
                 }
-                console.info('Coola is stop!!');
+                this.logger.info('Coola is stop!!');
                 resolve(null);
             }).catch((err) => {
-                console.error(err);
+                this.logger.error(err);
                 reject(err);
             });
         });
