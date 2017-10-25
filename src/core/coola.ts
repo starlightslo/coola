@@ -17,7 +17,7 @@ export class Coola {
 
     preHandlerMiddleware = (coolaRequestReply: CoolaRequestReply): void => {
         coolaRequestReply.set(State.START_TIME, moment());
-    };
+    }
 
     postHandlerMiddleware = (coolaRequestReply: CoolaRequestReply): void => {
         const responseTime = moment().diff(coolaRequestReply.get(State.START_TIME));
@@ -26,7 +26,7 @@ export class Coola {
             coolaRequestReply.getRequest().path + ' - ' +
             responseTime + 'ms'
         );
-    };
+    }
 
     constructor(config?: CoolaConfig) {
         // Replacing the config if existing
