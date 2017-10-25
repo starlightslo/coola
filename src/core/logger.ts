@@ -15,7 +15,7 @@ export class Logger implements ILogger {
     }
 
     public trace(data: any): void {
-        if (this.isDebug) { console.trace(moment().format('YYYY-MM-DD hh:mm:ss.SSS') + ' TRACE ' + data); }
+        if (this.isDebug) { console.trace(data); }
     }
 
     public info(data: any): void {
