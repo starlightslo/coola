@@ -46,16 +46,20 @@
   "homepage": "https://github.com/starlightslo/coola#readme",
   "dependencies": {
     "hapi": "^16.6.2",
-    "joi": "10.4.2"
+    "joi": "^10.4.2",
+    "moment": "2.13.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
+    "@types/colors": "^1.1.2",
     "@types/hapi": "^16.1.10",
     "@types/joi": "^10.4.2",
     "@types/mocha": "^2.2.43",
+    "@types/moment": "^2.13.0",
     "@types/node": "^8.0.41",
     "@types/reflect-metadata": "^0.0.5",
     "chai": "^4.1.2",
+    "colors": "^1.1.2",
     "coveralls": "^3.0.0",
     "husky": "^0.14.3",
     "mocha": "^4.0.1",
