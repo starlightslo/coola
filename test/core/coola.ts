@@ -12,8 +12,7 @@ describe('Core', () => {
 
     describe('Coola start', async () => {
         it('should set global path', async () => {
-            const result = await coola.start();
-            expect(result).to.be.true;
+            await coola.start();
         });
     });
 

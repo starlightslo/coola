@@ -103,26 +103,16 @@ export class Coola {
         // this.postHandlerMiddleware = postHandlerMiddleware;
     }
 
-    public async start(): Promise<boolean> {
-        const result = await this.mServer.start();
-        if (!result) {
-            return false;
-        }
-
+    public async start(): Promise<void> {
+        await this.mServer.start();
         this.mServer.getLogger().info('-----------------------------------------------------');
         this.mServer.getLogger().info('Coola is running at: ' + this.mServer.getHost() + ':' + this.mServer.getPort());
         this.mServer.getLogger().info('-----------------------------------------------------');
-        return true;
     }
 
-    public async stop(): Promise<boolean> {
-        const result = await this.mServer.stop();
-        if (!result) {
-            return false;
-        }
-
+    public async stop(): Promise<void> {
+        await this.mServer.stop();
         this.mServer.getLogger().info('Coola is stop!!');
-        return true;
     }
 
     public setLogger(logger: Logger) {
