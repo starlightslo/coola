@@ -6,23 +6,18 @@ import { Coola } from '../../src/core';
 describe('Core', () => {
     const coola = new Coola();
 
-    beforeEach((done) => {
-        done();
+    beforeEach(async () => {
+
     });
 
-    describe('Coola start', () => {
-        it('should set global path', (done) => {
-            coola.start().then((err) => {
-                expect(err).to.be.null;
-                done();
-            });
+    describe('Coola start', async () => {
+        it('should set global path', async () => {
+            const result = await coola.start();
+            expect(result).to.be.true;
         });
     });
 
-    afterEach((done) => {
-        coola.stop().then((err) => {
-            expect(err).to.be.null;
-            done();
-        });
+    afterEach(async () => {
+        await coola.stop();
     });
 });

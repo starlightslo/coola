@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import * as moment from 'moment';
 
 import { CoolaConfig } from './coola-config';
-import { State, ServerType } from '../enums';
+import { ServerType } from '../enums';
 import { HapiServer, KoaServer, Logger } from '../components';
 
 export class Coola {
