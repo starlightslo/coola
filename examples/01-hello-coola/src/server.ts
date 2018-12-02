@@ -1,12 +1,11 @@
 import { Coola } from '../../../src/core';
 
 import { Config } from './config';
+import { Users } from './controllers/users';
 
 async function bootstrap() {
-    const config = new Config();
-    config.setPort(8081);
-
-    const coola = new Coola(config);
-    const err = await coola.start();
+    const coola = new Coola(new Config());
+    coola.addController(Users);
+    await coola.start();
 }
 bootstrap();

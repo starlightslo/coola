@@ -1,14 +1,12 @@
-import { Controller, Get, RequestValidation, ResponseValidation } from '../../../../src/common';
-import { Coola, CoolaRequestReply } from '../../../../src/core';
+import { Controller, Get } from '../../../../src/decorators';
+import { CoolaRequest, CoolaResponse } from '../../../../src/core';
 
 @Controller()
 export class Index {
-    private a = false;
-
     @Get()
-    login(crr: CoolaRequestReply) {
-        crr.log.info('Hello Coola');
-        crr.reply('Hello Coola');
+    login(request: CoolaRequest, response: CoolaResponse) {
+        request.logger.info('Hello Coola');
+        return 'Hello Coola';
     }
 
 }

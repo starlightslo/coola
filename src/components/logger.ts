@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 import * as colors from 'colors';
-import * as chalk from 'chalk';
-import { ILogger } from '../common/interfaces/logger';
+import { ILogger } from '../interfaces';
 
 export class Logger implements ILogger {
     private isDebug: boolean = true;

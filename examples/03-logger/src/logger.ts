@@ -1,4 +1,4 @@
-import { Logger } from '../../../src/core';
+import { Logger } from '../../../src/components';
 
 export class MLogger extends Logger {
     constructor() {

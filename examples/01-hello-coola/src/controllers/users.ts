@@ -1,11 +1,11 @@
-import { Controller, Get } from '../../../../src/common';
-import { Coola, CoolaRequestReply } from '../../../../src/core';
+import { Controller, Get } from '../../../../src/decorators';
+import { CoolaRequest, CoolaResponse } from '../../../../src/core';
 
 @Controller('user')
 export class Users {
 
     @Get('/list')
-    getAll(crr: CoolaRequestReply) {
-        crr.reply(['user 1', 'user 2']);
+    getAll(request: CoolaRequest, response: CoolaResponse) {
+        return [{ id: 1, name: 'AAA' }, { id: 2, name: 'BBB' }];
     }
 }

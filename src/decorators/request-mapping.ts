@@ -2,8 +2,7 @@ import 'reflect-metadata';
 
 import { RequestMappingMetadata } from '../interfaces/request-mapping-metadata';
 import { RequestMethod } from '../enums/request-method';
-import { PATH_METADATA, METHOD_METADATA } from '../constants';
-import { Utils } from '../utils';
+import { PATH_METADATA, METHOD_METADATA } from '../commons/constants';
 
 const defaultMetadata = {
     [PATH_METADATA]: '/',
@@ -15,15 +14,22 @@ export const RequestMapping = (metadata: RequestMappingMetadata = defaultMetadat
     const requestMethod = metadata[METHOD_METADATA] || RequestMethod.GET;
 
     return (target, key, descriptor: PropertyDescriptor) => {
-        Reflect.defineMetadata(PATH_METADATA, path, descriptor.value);
-        Reflect.defineMetadata(METHOD_METADATA, requestMethod, descriptor.value);
+        let methods: RequestMethod[] = Reflect.getMetadata(METHOD_METADATA, descriptor.value);
+        if (!methods) {
+            methods = [requestMethod];
+        } else {
+            methods.push(requestMethod);
+        }
+
+        if (path) {
+            Reflect.defineMetadata(PATH_METADATA, path, descriptor.value);
+        }
+        Reflect.defineMetadata(METHOD_METADATA, methods, descriptor.value);
         return descriptor;
     };
 };
 
 const createMappingDecorator = (method: RequestMethod) => (path?: string): MethodDecorator => {
-    if (!path) path = '';
-
     return RequestMapping({
         [PATH_METADATA]: path,
         [METHOD_METADATA]: method,

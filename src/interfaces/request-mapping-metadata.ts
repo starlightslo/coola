@@ -1,4 +1,4 @@
-import { RequestMethod } from '../enums/request-method';
+import { RequestMethod } from '../enums';
 
 export interface RequestMappingMetadata {
     path?: string;

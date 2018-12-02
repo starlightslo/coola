@@ -1,32 +1,14 @@
 import 'reflect-metadata';
 
-import * as Hapi from 'hapi';
 import * as moment from 'moment';
 
 import { CoolaConfig } from './coola-config';
-import { CoolaRequestReply } from './coola-request-reply';
-import { Logger } from './logger';
-import { Utils } from '../common';
-import { metadata, PATH_METADATA, METHOD_METADATA, REQUEST_VALIDATION, RESPONSE_VALIDATION } from '../common/constants';
-import { RequestMethod, State } from '../common/enums';
+import { State, ServerType } from '../enums';
+import { HapiServer, KoaServer, Logger } from '../components';
 
 export class Coola {
-    private mHapiServer = new Hapi.Server();
+    private readonly mServer: HapiServer | KoaServer;
     private config: CoolaConfig = new CoolaConfig();
-    private logger: Logger = null;
-
-    preHandlerMiddleware = (coolaRequestReply: CoolaRequestReply): void => {
-        coolaRequestReply.set(State.START_TIME, moment());
-    }
-
-    postHandlerMiddleware = (coolaRequestReply: CoolaRequestReply): void => {
-        const responseTime = moment().diff(coolaRequestReply.get(State.START_TIME));
-        this.logger.debug(
-            coolaRequestReply.getRequest().method + ' ' +
-            coolaRequestReply.getRequest().path + ' - ' +
-            responseTime + 'ms'
-        );
-    }
 
     constructor(config?: CoolaConfig) {
         // Replacing the config if existing
@@ -34,17 +16,24 @@ export class Coola {
             this.config = config;
         }
 
-        // Setting logger
-        this.logger = new Logger(this.config.getDebug());
-
-        this.mHapiServer.connection({
-            host: this.config.getHost(),
-            port: this.config.getPort()
-        });
-
-        this.handleControllers();
+        // Setup Server
+        switch (this.config.getServerType()) {
+            case ServerType.Hapi:
+                this.mServer = new HapiServer(this.config);
+                break;
+            case ServerType.Koa:
+                this.mServer = new KoaServer(this.config);
+                break;
+            default:
+                this.mServer = new HapiServer(this.config);
+        }
     }
 
+    public addController(controller: any): void {
+        this.mServer.addController(controller);
+    }
+
+    /*
     private handleControllers(): void {
         const controllers = Reflect.getMetadata(metadata.CONTROLLERS, this.config.constructor);
         if (!controllers) { return; }
@@ -104,56 +93,55 @@ export class Coola {
         this.mHapiServer.route(routeConfig);
 
     }
+    */
 
     public setPreHandlerMiddleware(preHandlerMiddleware: any): void {
-        this.preHandlerMiddleware = preHandlerMiddleware;
+        // this.preHandlerMiddleware = preHandlerMiddleware;
     }
 
     public setPostHandlerMiddleware(postHandlerMiddleware: any): void {
-        this.postHandlerMiddleware = postHandlerMiddleware;
+        // this.postHandlerMiddleware = postHandlerMiddleware;
+    }
+
+    public async start(): Promise<boolean> {
+        const result = await this.mServer.start();
+        if (!result) {
+            return false;
+        }
+
+        this.mServer.getLogger().info('-----------------------------------------------------');
+        this.mServer.getLogger().info('Coola is running at: ' + this.mServer.getHost() + ':' + this.mServer.getPort());
+        this.mServer.getLogger().info('-----------------------------------------------------');
+        return true;
+    }
+
+    public async stop(): Promise<boolean> {
+        const result = await this.mServer.stop();
+        if (!result) {
+            return false;
+        }
+
+        this.mServer.getLogger().info('Coola is stop!!');
+        return true;
     }
 
     public setLogger(logger: Logger) {
-        this.logger = logger;
+        this.mServer.setLogger(logger);
     }
 
-    public getLogger(): Logger {
-        return this.logger;
+    private readonly preHandlerMiddleware = (): void => {
+        // coolaRequestReply.set(State.START_TIME, moment());
     }
 
-    public start(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this.mHapiServer.start().then((err) => {
-                if (err) {
-                    this.logger.error(err);
-                    resolve(err.toString());
-                    return;
-                }
-                this.logger.info('-----------------------------------------------------');
-                this.logger.info('Coola is running at: ' + this.mHapiServer.info.uri);
-                this.logger.info('-----------------------------------------------------');
-                resolve(null);
-            }).catch((err) => {
-                this.logger.error(err);
-                reject(err);
-            });
-        });
+    private readonly postHandlerMiddleware = (): void => {
+        // const responseTime = moment().diff(coolaRequestReply.get(State.START_TIME));
+        /*
+        this.logger.debug(
+            coolaRequestReply.getRequest().method + ' ' +
+            coolaRequestReply.getRequest().path + ' - ' +
+            responseTime + 'ms'
+        );
+        */
     }
 
-    public stop(): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this.mHapiServer.stop().then((err) => {
-                if (err) {
-                    this.logger.error(err);
-                    resolve(err.toString());
-                    return;
-                }
-                this.logger.info('Coola is stop!!');
-                resolve(null);
-            }).catch((err) => {
-                this.logger.error(err);
-                reject(err);
-            });
-        });
-    }
 }

@@ -1,38 +1,17 @@
 import 'reflect-metadata';
 
-import { Module } from '../common';
+import { ServerConfig } from '../components/server-config';
+import { ServerType } from '../enums/server-type';
 
-@Module({})
-export class CoolaConfig {
-    private host: string = 'localhost';
-    private port: number = 8080;
-    private debug: boolean = true;
+export class CoolaConfig extends ServerConfig {
+    private readonly serverType: ServerType = ServerType.Hapi;
 
-    constructor() {
-
+    constructor(serverType?: ServerType, host?: string, port?: number) {
+        super(host, port);
+        this.serverType = serverType;
     }
 
-    public setHost(host: string): void {
-        this.host = host;
-    }
-
-    public setPort(port: number): void {
-        this.port = port;
-    }
-
-    public setDebug(debug: boolean): void {
-        this.debug = debug;
-    }
-
-    public getHost(): string {
-        return this.host;
-    }
-
-    public getPort(): number {
-        return this.port;
-    }
-
-    public getDebug(): boolean {
-        return this.debug;
+    public getServerType(): ServerType {
+        return this.serverType;
     }
 }
