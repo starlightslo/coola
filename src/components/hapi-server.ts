@@ -91,17 +91,19 @@ export class HapiServer extends Server {
                     coolaRequest.setPayload(request.payload);
                     coolaRequest.setParams(request.params);
                     coolaRequest.setQuery(request.query);
+                    coolaRequest.setMethod(request.method);
+                    coolaRequest.setPath(request.path);
 
                     const coolaResponse = new CoolaResponse();
 
-                    // this.preHandlerMiddleware(coolaRequestReply);
+                    this.preHandler(coolaRequest, coolaResponse);
                     let message = '';
                     try {
                         message = func(coolaRequest, coolaResponse);
                     } catch (err) {
                         this.errorHandler(err);
                     }
-                    // this.postHandlerMiddleware(coolaRequestReply);
+                    this.postHandler(coolaRequest, coolaResponse);
                     return message;
                 }
             }
@@ -125,4 +127,5 @@ export class HapiServer extends Server {
             throw err;
         }
     }
+
 }

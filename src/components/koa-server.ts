@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+import * as bodyParser from 'koa-bodyparser';
 
 import { Server, ServerConfig } from './';
 import { PATH_METADATA, METHOD_METADATA } from '../commons/constants';
@@ -12,6 +13,8 @@ export class KoaServer extends Server {
 
     constructor(config: ServerConfig) {
         super(config);
+
+        this.mServer.use(bodyParser());
     }
     start(): void {
         this.mServer.listen(this.config.getPort());
@@ -63,17 +66,23 @@ export class KoaServer extends Server {
 
         router.register(path, methods, (ctx: Router.IRouterContext, next: () => Promise<any>) => {
             const coolaRequest = new CoolaRequest(this.services, this.logger);
+            coolaRequest.setPayload(ctx.request.body);
+            coolaRequest.setParams(ctx.params);
+            coolaRequest.setQuery(ctx.request.query);
+            coolaRequest.setMethod(ctx.method);
+            coolaRequest.setPath(ctx.path);
 
             const coolaResponse = new CoolaResponse();
 
 
+            this.preHandler(coolaRequest, coolaResponse);
             let message = '';
             try {
                 message = func(coolaRequest, coolaResponse);
             } catch (err) {
                 this.errorHandler(err);
             }
-
+            this.postHandler(coolaRequest, coolaResponse);
             ctx.body = message;
         });
     }
